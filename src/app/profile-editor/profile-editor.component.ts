@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder, FormArray } from '@angular/forms';
+import { Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-profile-editor',
@@ -8,7 +9,7 @@ import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 })
 export class ProfileEditorComponent implements OnInit {
   profileForm = this.fb.group({
-    firstName: [''],
+    firstName: ['', Validators.required],
     lastName: [''],
     address: this.fb.group({
       street: [''],
@@ -16,9 +17,14 @@ export class ProfileEditorComponent implements OnInit {
       state: [''],
       zip: [''],
     }),
+    aliases: this.fb.array([this.fb.control('')]),
   });
 
   constructor(private fb: FormBuilder) {}
+
+  get aliases() {
+    return this.profileForm.get('aliases') as FormArray;
+  }
 
   ngOnInit(): void {}
 
@@ -34,5 +40,9 @@ export class ProfileEditorComponent implements OnInit {
         street: '123 Drew Street',
       },
     });
+  }
+
+  addAlias() {
+    this.aliases.push(this.fb.control(''));
   }
 }
